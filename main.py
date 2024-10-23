@@ -5,12 +5,11 @@ from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher
 
 from bot.handlers.start_handlers import router
-
+from bot.config import TOKEN
 
 
 async def main():
-    load_dotenv()
-    bot = Bot(token=os.getenv('TOKEN'))
+    bot = Bot(token=TOKEN)
     dispatcher = Dispatcher()
     dispatcher.include_router(router)
     await dispatcher.start_polling(bot)
