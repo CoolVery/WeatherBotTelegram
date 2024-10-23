@@ -6,6 +6,9 @@ from aiogram.fsm.context import FSMContext
 
 from bot.services.translate import translate_name_city_to_en
 from bot.services.requests import get_weather
+from bot.services.generate_answer import json_to_message
+
+from pprint import pprint
 
 
 router = Router()
@@ -32,6 +35,9 @@ async def get_city_weather(message: Message, state: FSMContext):
     date = await state.get_data()
     await state.clear()
     en_city_name = await translate_name_city_to_en(date["city"])
-    print(en_city_name)
-    json = await get_weather(en_city_name)
-    await message.answer(f'Вы ввели город: {en_city_name}') 
+    json_answer = await get_weather(en_city_name)
+    if (json_answer[0] == 400):
+            await message.answer("Введите правильное название города") 
+    else:
+        answer_str = await json_to_message(json_answer[1])
+        await message.answer(answer_str) 
